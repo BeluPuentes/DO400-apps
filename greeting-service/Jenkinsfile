@@ -1,26 +1,14 @@
 pipeline{
-    agent{
-        label "nodejs"
-    }
-    stages{
-        stage("Install dependencies"){
-            steps{
-                sh "npm ci"
-            }
-        }
+    agent any
 
-        stage("Check Style"){
+    stages{ 
+       stage('Deploy') {
             steps{
-                sh "npm run lint"
+                sh '''
+                    oc project spavms-deploy-strategies
+		    oc start-build greeting-service --follow --wait
+                '''
             }
-        }
-
-        stage("Test"){
-            steps{
-                sh "npm test"
-            }
-        }
-
-        // Add the "Deploy" stage here
+        } 
     }
 }
